@@ -1,0 +1,80 @@
+---
+pagetitle: "Robust Sensing and Data-Driven Control"
+author-meta: "Aykut C. Satici"
+institute: "Boise State University"
+---
+
+## Robust Sensing and Learning Control of Contact-Rich Robots {.center .smaller}
+<!-- ###################################################################### -->
+
+<hr>
+
+::: {.r-stack style="font-size: 30px"}
+<br>
+<span style="font-weight: bold;">UT Dallas Seminar</span>
+:::
+
+::: {.center}
+![](./contents/assets/UT_Dallas_2_Color_Emblem.svg){width="12%" fig-align="center"}
+:::
+
+
+<br/>
+
+::: {layout="[50, 50, 50]"}
+<span style="margin-left: 72px">__Presenter__:</span> <br>
+<span style="margin-left: 72px">Aykut Satici, Ph.D.</span> <br>
+<span style="margin-left: 72px">Associate Professor</span> <br>
+<span style="margin-left: 72px">Director, Robot Control Lab</span> <br>
+<span style="margin-left: 72px">Mechanical and Biomed. Eng.</span> <br>
+<span style="margin-left: 72px">Boise, Idaho, USA</span>
+
+
+![](./contents/assets/boisestate-stackedlogo-2color-rgb_v2.png){width="40%" fig-align="center"}
+
+__Graduate Students__: <br/>
+:thailand: Wankun Sirichotiyakul :mortar_board: <br/>
+:ethiopia: Nardos Ayele Ashenafi :mortar_board: <br/>
+:us: Alex Peterson :mortar_board: <br/>
+:us: Chandika Silva :mortar_board: <br/>
+:us: Chris Dagher :mortar_board: <br/>
+:::
+
+<!--
+## Peer-Reviewed Contributions
+
+<br>
+
+:::: {.columns}
+::: {.column width="50%"}
+### <span style="font-variant:small-caps;">NeuralPbc</span>
+
+<ul>
+<li class="fragment highlight-red" data-fragment-index="0">ISER 2020</li>
+<li class="fragment highlight-red" data-fragment-index="0">CCTA 2021</li>
+<li class="fragment highlight-blue" data-fragment-index="0">ACC 2022</li>
+<li class="fragment highlight-blue" data-fragment-index="0">L-CSS 2022<sup>1</sup></li>
+</ul>
+
+:::
+::: {.column width="50%"}
+### <span style="font-variant:small-caps;">NeuralIdaPbc</span>
+
+<ul>
+<li class="fragment highlight-red" data-fragment-index="0">*IJC 2021*</li>
+<li class="fragment highlight-blue" data-fragment-index="0">*TACON 2022*[^underreview]</li>
+</ul>
+:::
+::::
+
+[^underreview]: Under review
+
+::: {.notes}
+* ISER - International Symposium on Experimental Robotics
+* CCTA - Conference on Control Technology and Applications
+* ACC - American Control Conference
+* LCSS - Control Systems Letters
+* IJC - International Journal of Control
+* TACON - Transactions on Automatic Control
+:::
+-->

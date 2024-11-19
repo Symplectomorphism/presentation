@@ -1,0 +1,299 @@
+# Robust Localization over Power Lines {visibility="uncounted"}
+<!-- ###################################################################### -->
+
+## Robust Localization w.r.t. Power Lines in Sparse Environments 
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+1. The ground has a uniform texture.
+2. There are too few utility poles or immediate fences.
+3. There are no trees or other geometries.
+4. GPS provides absolute position, need relative pose to power lines!
+
+:::
+
+::: {.column width="45%"}
+
+::: {.fragment .fade-in fragment-index=1}
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-CU5aX9z62I?si=8N3OLPNZO5y0uv31?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+:::
+
+:::
+
+::::
+
+::: {.callout-note appearance="simple" .fragment .fade-in fragment-index=1}
+## Insufficient landmarks
+Any vision-based estimation mechanism will not perform reliably and robustly for drone localization.
+:::
+
+::: {.callout-tip appearance="default" .fragment .fade-in fragment-index=1}
+## Electromagnetic field around the power lines
+If we can get reliable measurements, then we can devise a distance and bearing 
+factor exploiting this field.
+:::
+
+
+## Electric and Magnetic Field around Three-Phase Power Lines {auto-animate=true}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.callout-important icon=false}
+## EM Field near Three-Phase Power Lines
+Quasi-static approximation to Maxwell's equations yields ($\mathbf{q} = (x, z)$ 
+is the location of the sensor)
+
+$$
+\bar{E}^2(\mathbf{q}) = \frac{1}{2}\sum_{\alpha=1}^3\left(e_\alpha^2 - 
+\sum_{\alpha^\prime > \alpha}^3 c_{\alpha\alpha^\prime}e_\alpha e_{\alpha^\prime} \right),
+$$
+
+where $e_\alpha = \frac{\xi}{r_\alpha} = \frac{\beta c \mu_0 I_0}{2\pi}\frac{1}{r_\alpha}$ is the peak 
+electric field magnitude and $c_{\alpha\alpha^\prime} = \cos{\left(\theta_\alpha - \theta_{\alpha^\prime}\right)}$.
+:::
+
+![](./contents/assets/general_power_line.svg){width="40%" fig-align="center"}
+
+:::
+
+::: {.column width="50%" layout-valign="center"}
+![](./contents/assets/e_field.svg){width="100%"}
+
+::: {.callout-tip appearance="minimal"}
+From total rms energy considerations, it can be shown that $\bar{B} = \sqrt{\mu_0 \varepsilon_0} \bar{E}$.
+:::
+
+:::
+
+::::
+
+
+## Gradient of the Electric Field around Three-Phase Power Lines {auto-animate=true}
+
+
+:::: {.columns}
+
+::: {.column width="53%"}
+
+::: {.callout-important icon=false}
+## Gradient of the rms Electric Field
+\begin{align*}
+&\nabla_{\mathbf{q}} \bar{E}(\mathbf{q}) = 2\bar{E}\nabla_{\mathbf{q}}\bar{E} \\
+&\phantom{12}= \frac{1}{2\xi}\sum_{\alpha=1}^3 e_\alpha \begin{bmatrix}
+  -2e_\alpha^2c_\alpha + \sum_{\alpha^\prime \neq \alpha} e_{\alpha^\prime}^2 \cos{\left(\theta_\alpha - 2\theta_{\alpha^\prime}\right)}\\
+  2e_\alpha^2c_\alpha + \sum_{\alpha^\prime \neq \alpha} e_{\alpha^\prime}^2 \sin{\left(\theta_\alpha - 2\theta_{\alpha^\prime}\right)}
+\end{bmatrix}
+\end{align*}
+:::
+
+::: {.callout-tip icon=false}
+## Lemma: Direction of the gradient
+The gradient $\nabla_{\mathbf{q}} \bar{E}(\mathbf{q})$ points into the convex hull (triangle)
+formed by the transmission wires for every $\mathbf{q}$.
+:::
+
+:::
+
+::: {.column width="47%"}
+![](./contents/assets/e_field.svg){width="100%"}
+:::
+
+::::
+
+
+## Navigating the UAV to One of the Power Lines {auto-animate=true}
+
+:::: {.columns}
+
+::: {.column width="53%"}
+
+::: {.callout-tip icon=false}
+## Potential Function and its Gradient
+Define the potential function $V(\mathbf{q}) = \frac{1}{\bar{E}^2(\mathbf{q})}$.
+Its gradient is 
+$$
+\nabla_{\mathbf{q}}V(\mathbf{q}) = -\frac{2}{\bar{E}^3}\nabla_{\mathbf{q}}\bar{E}(\mathbf{q})
+$$
+Further, $\lVert \nabla_{\mathbf{q}}V(\mathbf{q}) \rVert = O\left(\frac{1}{\bar{E}}\right)$
+as $\bar{E} \rightarrow \infty$ (or $r_\alpha \rightarrow 0$).
+:::
+
+::: {.callout-tip icon=false}
+## Lemma: Critical points of $V(\mathbf{q})$
+* _Generically_ $V$ has $5$ isolated critical points, $3$ of which are global minima and have $r_\alpha = 0$. 
+
+* Applying Poincar&#233;-Hopf theorem on the convex hull of the power lines yields 
+the remaining 2 are __saddle points__!
+:::
+
+:::
+
+::: {.column width="47%"}
+![](./contents/assets/e_field_trajectory.svg){width="100%"}
+
+::: {.callout-important appearance="minimal"}
+Following $\nabla_{\mathbf{q}}V(\mathbf{q})$ navigates the drone to one of the 
+power lines.
+:::
+
+:::
+
+::::
+
+
+## Robust Localization with GTSAM: Sensor Fusion Library {auto-animate=true}
+
+:::: {.columns} 
+
+
+::: {.column width="50%"}
+
+
+
+* Factors depict constaints on the poses as:
+    * prior state: $f_0(x_1)$
+    * odometry relation: $f_i(x_i, x_{i+1}; o_i)$
+    * observations: $f_i(x_i;z_i)$.
+
+
+:::
+
+::: {.column width="50%"}
+
+<div class="r-stack">
+
+<!-- odom: -->
+:::{.fragment .fade-in-then-out fragment-index=2 }
+$$
+\begin{aligned}
+p(\mathbf{x} | \mathbf{o}) \propto p(x_1) \prod_{i=2}^{3} p(x_i | x_{i-1}, o_i)\\
+% f(\mathbf{x}) = \arg\max_{\mathbf{x}}  f_0(x_1) \prod_{i=1}^{2} f_i(x_i, x_{i+1}; o_i) 
+\end{aligned}
+$$
+
+:::
+
+<!-- odom with gps: -->
+:::{.fragment .fade-in-then-out fragment-index=3 }
+$$
+\begin{aligned}
+p(\mathbf{x} | \mathbf{o}, \mathbf{z}) \propto p(x_1) \prod_{i=2}^{3} p(x_i | x_{i-1}, o_i) p(z_i | x_i) \\
+% f(\mathbf{x}) = \arg\max_{\mathbf{x}}  f_0(x_1) \prod_{i=1}^{2} f_i(x_i, x_{i+1}; o_i)  g_i(x_i; z_i) 
+\end{aligned}
+$$
+
+:::
+
+<!-- odom with landmark: -->
+:::{.fragment .fade-in-then-out fragment-index=4 }
+$$
+\begin{aligned}
+p(\mathbf{x} | \mathbf{o}, \mathbf{l}) \propto p(x_1) \prod_{i=2}^{3} p(x_i | x_{i-1}, o_i) p(l_i | x_i) \\
+% f(\mathbf{x}) = \arg\max_{\mathbf{x}}  f_0(x_1) \prod_{i=1}^{2} f_i(x_i, x_{i+1}; o_i)  h_i(x_i; l_i)
+\end{aligned}
+$$
+
+:::
+
+</div>
+
+:::
+
+::::
+
+::: {.r-stack}
+
+:::{.fragment .fade-in-then-out fragment-index=2 }
+
+![](./contents/assets/nodes_gtsam_2.svg){.absolute top=194 left=50 width="1400" height="250"}
+
+:::
+
+:::{.fragment .fade-in-then-out fragment-index=3 }
+
+![](./contents/assets/nodes_gtsam_3.svg){.absolute top=250 left=50 width="1400" height="350"}
+
+:::
+
+
+:::{.fragment .fade-in fragment-index=4 }
+
+![](./contents/assets/nodes_gtsam_1.svg){.absolute top=250 left=50 width="1500" height="450"}
+
+:::
+
+:::
+
+
+
+## GTSAM meets Gradient of the Electric Field {auto-animate=true}
+
+:::: {.columns}
+
+::: {.column width="55%"}
+
+::: {.callout-tip icon=false}
+## $\nabla_{\mathbf{q}}\bar{E}(\mathbf{q})$ points towards the convex hull
+The unit vector along this gradient may be used as a _bearing_ factor in GTSAM 
+at any point $\mathbf{q}$ during navigation!
+
+* Turns the convex hull of the power lines into a __landmark__.
+
+:::
+
+
+{{< video ./contents/assets/translate_video.mp4 width=600 autoplay="true" >}}
+:::
+
+::: {.column width="45%"}
+![](./contents/assets/bearing_range_exp_arrangement.svg){width="70%" fig-align="center"}
+
+::: {.r-stack}
+![](./contents/assets/estimated_true_line_phis_cal_uncal2.svg){width="100%" fig-align="right" .fragment .fade-in-then-out fragment-index=0}
+
+![](./contents/assets/relative_position.svg){width="100%" fig-align="right" .fragment .fade-in fragment-index=1}
+:::
+
+:::
+
+
+::::
+
+
+
+## Stable Contact and Manipulation over Power Lines
+
+:::: {.columns}
+
+::: {.column width="85%"}
+{{< video ./contents/assets/unclamped_then_clamped.mp4 width="850%" autoplay="true" >}}
+
+::: {.callout-tip appearance="minimal"}
+We are implementing passivity-based controllers (data-driven or otherwise) for manipulation over power lines.
+:::
+:::
+
+
+::: {.column width="15%"}
+
+::: {.center-xy}
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+![](./contents/assets/nsf-logo.svg){width="150%"}
+
+:::
+
+:::
+
+::::

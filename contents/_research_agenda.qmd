@@ -1,0 +1,336 @@
+# Research Agenda {visibility="uncounted"}
+
+## Where the Robotics/Control Field is Going?
+
+
+<div class="columns">
+
+<div class="column" style="width:40%; position: left:80px;">
+
+<br>
+
+<iframe align="right" width="315" height="560"
+src="https://youtube.com/embed/KM0YaWq1y4E?si=qWQsT5sCviY45VEq"
+title="YouTube video player"
+frameborder="0"
+allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+allowfullscreen></iframe>
+
+</div>
+
+<div class="column" style="width:58%">
+<!--{{< video ./contents/assets/PhysicalIntelligence_2min_v2_out.mp4 >}}-->
+
+<video autoplay="false" muted="true" controls="" loop="" playsinline="" class="w-full mx-auto max-w-7xl mb-6 rounded-md"><source src="https://dnrjl01ydafck.cloudfront.net/v2/upload/PhysicalIntelligence_2min_v2_out.mp4" height="250" type="video/mp4"></video>
+
+<iframe width="500" height="281" src="https://www.youtube.com/embed/cpraXaw7dyc?si=yANbdBlIkuAOhaFn?autoplay=1?mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+</div>
+
+
+</div>
+
+
+## Future Research: Robustness of GNNs for Robot Control 
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](./contents/assets/nervenet.png)
+:::
+
+::: {.column width="50%"}
+
+{{< video src="./contents/assets/nervenet.mp4" start="10" >}}
+
+<!--center>
+<video autoplay="true" muted="true"><source src="./contents/assets/nervenet.mp4"></video>
+</center-->
+
+:::
+
+::::
+
+:::: {.columns}
+
+::: {.column width="80%"}
+
+![](./contents/assets/gnn_robustness.jpg)
+
+:::
+
+::: {.column width="20%"}
+
+![](./contents/assets/abbas.jpg){width="60%"}
+
+![](./contents/assets/ruths.jpg){width="60%"}
+
+:::
+
+
+::::
+
+
+## Future Research: Convex Optimization Layers on GNNs {visibility="uncounted"}
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](./contents/assets/convex_opt_layer.png)
+
+::: {.callout-warning icon="false"}
+## End-to-end formation control with GNNs[^dagger]
+
+![](./contents/assets/end_to_end_gnn_formation_ctrl.png)
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.r-stack}
+
+::: {.fragment .fade-in-then-out fragment-index=0}
+* Propagate features to neighbors using convex-opt layers rather than MLPs.
+
+* Alternately, implement the message
+<span style="font-variant:small-caps;">Aggregate</span> phase using convex-opt 
+layers.
+
+:::
+
+::: {.fragment .fade-in fragment-index=1}
+
+<center>
+<img src="./contents/assets/abbas.jpg" style="width:25%"></img>
+![](./contents/assets/ruths.jpg){width="25%" fig-align="center"}
+![](./contents/assets/spong_1.jpg){width="25%" fig-align="center"}
+</center>
+
+:::
+
+:::
+
+::: {.callout-warning icon="false"}
+## GNN for Legged Robot Contact Perception[^ddagger]
+
+![](./contents/assets/contact_perception.png){height=175 fig-align="center"}
+:::
+
+:::
+
+::::
+
+
+[^dagger]: Jiang, Chao et. al. (2023) End-to-end decentralized formation control using a GNN-based learning method. 
+
+[^ddagger]: Butterfield, Daniel et. al. (2024) MI-HGNN: Morphology-Informed Heterogeneous Graph Neural Network for Legged Robot Contact Perception. 
+
+
+
+## Future Research: Representation-learning through LLMs {visibility="uncounted"}
+
+<div class="columns">
+
+<div class="column" style="width:48%">
+
+<center>
+<img src="./contents/assets/GraphSage.jpg" style="width:100%">
+</center>
+
+<div class="center-xy">
+:arrow_up:
+</div>
+
+<center>
+<img src="./contents/assets/causal_transformer.png" style="width:100%">
+</center>
+
+</div>
+
+
+<div class="column" style="width:48%">
+
+::: {.r-stack}
+
+::: {.fragment .fade-in-then-out fragment-index=0}
+
+<ul>
+  <li>Utilize a causal transformer to learn trajectory representations.</li>
+  <li>Can learn them for each joint.</li>
+  <li>Use these representations as feature vectors of a subsequent GNN.</li>
+</ul>
+
+:::
+
+::: {.fragment .fade-in fragment-index=1}
+
+<center>
+<img src="./contents/assets/abbas.jpg" style="width:25%"></img>
+![](./contents/assets/spong_1.jpg){width="25%" fig-align="center"}
+![](./contents/assets/xiang.jpg){width="25%" fig-align="center"}
+</center>
+
+:::
+
+
+
+:::
+
+
+<video autoplay="true" muted="true"><source src="./contents/assets/dexterous_trimmed.mp4" type="video/mp4"></video>
+
+::: {.callout icon="false"}
+## Courtesy of MIT CSAIL
+:::
+
+</div>
+
+</div>
+
+
+
+## Funding Mechanism: NSF Foundational Research in Robotics
+
+<div class="columns">
+
+<div class="column" style="width:40%">
+
+<iframe width="500" height="281" src="https://www.youtube.com/embed/Av9z51QDNxg?si=tc6XAqDKaYwpxwFD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<iframe width="500" height="281" src="https://www.youtube.com/embed/-_dttDbGhVA?si=kaXjNGkbsSlKi9s3?mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+</div>
+
+<div class="column" style="width:40%">
+<!--{{< video ./contents/assets/PhysicalIntelligence_2min_v2_out.mp4 >}}-->
+
+<video autoplay="false" muted="true" controls="" loop="" playsinline="" class="w-full mx-auto max-w-7xl mb-6 rounded-md"><source src="https://dnrjl01ydafck.cloudfront.net/v2/upload/PhysicalIntelligence_2min_v2_out.mp4" height="281" type="video/mp4"></video>
+
+<br>
+
+<iframe width="500" height="281" src="https://www.youtube.com/embed/cpraXaw7dyc?si=yANbdBlIkuAOhaFn?autoplay=1?mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+</div>
+
+<div class="column" style="width:15%">
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+::: {layout="[[-1], [1], [-1]]"}
+![](./contents/assets/nsf-logo.svg){width="100%"}
+:::
+
+</div>
+
+</div>
+
+
+
+## Funding Mechanisms: SBIR and STTRs {visibility="uncounted"}
+
+
+<div class="columns">
+
+<div class="column" style="width:40%">
+
+&nbsp;
+
+&nbsp;
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wkqyR81LgOc?si=0YICbgkrsU1Igh_X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<center>
+<img src="./contents/assets/adams.webp" style="width:30%"></img>
+</center>
+
+</div>
+
+<div class="column" style="width:40%">
+
+&nbsp;
+
+&nbsp;
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UVOn-i8JZbE?si=JCOW_cdL0b1xFGMr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+<center>
+<img src="./contents/assets/nsf-logo.svg" style="width:50%"></img>
+</center>
+
+</div>
+
+<div class="column" style="width:15%">
+
+::: {layout="[[1], [-1], [1], [-1], [1]]"}
+![](./contents/assets/dod-logo.svg){width="100%"}
+
+![](./contents/assets/doe-logo.svg){width="100%"}
+
+![](./contents/assets/usda-logo.svg){width="100%"}
+:::
+
+</div>
+
+</div>
+
+
+## Funding Mechanism: NIH through Collaborations {visibility="uncounted"}
+
+
+:::: {.columns}
+
+
+::: {.column width="42%"}
+
+::: {layout="[[1], [-1], [1], [-1], [1]]"}
+
+![](./contents/assets/omor_pic6.png){width="45%" fig-align="center"}
+![](./contents/assets/iss.avif){width="45%"}
+
+![](./contents/assets/omor_pic3.png){height="20%"}
+:::
+
+:::
+
+
+::: {.column width="42%"}
+![](./contents/assets/nina_pic1.png){width="100%"}
+:::
+
+::: {.column width="16%"}
+
+::: {.r-stack}
+
+::: {.fragment .fade-in-then-out fragment-index=0}
+::: {layout="[[-1], [1], [-1], [1], [-1]]"}
+![](./contents/assets/nih-logo.svg){width="100%"}
+
+![](./contents/assets/omor_pic4.png){width="100%"}
+:::
+:::
+
+::: {.fragment .fade-in fragment-index=1}
+::: {layout="[[1], [1], [1]]"}
+![](./contents/assets/uzer.webp){width="100%"}
+
+![](./contents/assets/moheimani.jpg){width="100%"}
+
+![](./contents/assets/cao.png){width="100%"}
+:::
+:::
+
+
+:::
+
+:::
+
+
+::::
