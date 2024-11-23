@@ -1,12 +1,13 @@
 # Robust Data-Driven Passivity-Based Controller Synthesis {visibility="uncounted"}
 <!-- ###################################################################### -->
 
-## Dissipativity {auto-animate="true"}
+## Dissipativity and Passivity {auto-animate="true"}
 <!-- ###################################################################### -->
 
-::: {layout="[[-1], [1], [-1]]"}
+<!-- ::: {layout="[[-1], [1], [-1]]"} -->
 
-A dynamical system
+::: {.callout-tip icon="false"}
+## Dissipativity
 <span hidden="hidden">%</span>
 $$
 \Sigma: \quad
@@ -26,8 +27,28 @@ for all $x(t_0) = x_0$, all input $u$, and all $t_1 \geq t_0$.
 
 :::
 
+<!-- ::: -->
 
-## Dissipativity and Passivity {auto-animate="true"}
+::: {.callout-warning icon=false}
+## Passivity
+The system $\Sigma$ is __passive__ if it is dissipative with supply rate
+
+$$s = u^\top y.$$
+
+It is __output strictly passive__ if it is dissipative with supply rate
+
+$$s = u^\top y - \delta \lVert y \rVert^2, \; \delta > 0.$$
+
+:::
+
+::: {.notes}
+* Dissipative if $\exists$ a storage function $H$ and an supply rate $s$ s.t. 
+the storage increases *at most* as much as that supplies by $s$.
+* Passivity: special case, where $s = u^\top y$.
+:::
+
+
+## Dissipativity and Passivity {auto-animate="true" visibility="hidden"}
 
 $$
 \mathcal{H}\left(  x(t_1) \right) \leq  \mathcal{H}\left(  x(t_0) \right) + \int_{t_0}^{t_1} s(u(t), y(t)) \, \text{d}t
@@ -57,7 +78,7 @@ $$s = u^\top y - \delta \lVert y \rVert^2, \; \delta > 0.$$
 :::
 
 
-## Stability of Passive Systems {auto-animate="true"}
+## (Lyapunov) Stability of Passive Systems {auto-animate="true"}
 <!-- ###################################################################### -->
 
 $$
@@ -73,7 +94,7 @@ $u^{\top} y \geq \dot{\mathcal{H}} = \frac{\partial\mathcal{H}}{\partial x} f(x,
 
 ::: {layout="[[-1], [1], [-1]]"}
 
-::: {.callout-note icon="false"}
+::: {.callout-tip icon="false"}
 ## Lemma (Khalil, 2002)
 The origin of $\Sigma$ is: 
 
@@ -88,6 +109,119 @@ The origin of $\Sigma$ is:
 ::: {.notes}
 * Notice that we only require that the function $\mathcal{H}$ be positive semidefinite and not necessarily positive definite as per usual Lyapunov conditions.
 * Observability (detectability) ensures LaSalle's theorem works.
+:::
+
+
+## Passivity-Based Control (PBC) Toy Example: Simple Pendulum {auto-animate="false" auto-animate-easing="ease"}
+<!-- ###################################################################### -->
+
+:::: {.callout-warning icon="false"}
+
+## System Dynamics
+
+$H(q,p) = \frac{1}{2} J^{-1} p^2 + mgl (1 - \cos q)$
+
+$$
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
+\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & 0 \end{bmatrix} 
+\begin{bmatrix} \nabla_q H_{\phantom{d}} \\ \nabla_p H_{\phantom{d}} \end{bmatrix} +
+\begin{bmatrix} 0 \\ G \end{bmatrix} u_\phantom{di},
+\qquad y = \dot{q}
+$$
+
+<!-- ::: {.fragment .fade-in fragment-index=1} -->
+Choose $u = u_{es} + u_{di}$ that transforms system into a passive one  with $x^\star = (q^\star, 0)$.
+
+$Gu_{es} = \nabla_q H  - \nabla_q H_d$ transforms to 
+<!-- and $H_d$ satisfying $\dot{H}_{d} \leq y^\top u_{di}$ -->
+<!-- ::: -->
+
+<!-- ::: {.fragment .fade-in-then-out fragment-index=1} -->
+$$
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
+\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & 0 \end{bmatrix} 
+\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix} +
+\begin{bmatrix} 0 \\ G \end{bmatrix} u_{di},
+\qquad y = \dot{q}
+$$
+<!-- ::: -->
+
+
+<!-- ::: {.fragment .fade-in  fragment-index=2} -->
+
+$Gu_{di} = -GK_D G^\top \nabla_p H_d$ transforms to
+<!-- ::: -->
+
+
+<!-- ::: {.r-stack} -->
+
+
+
+<!-- ::: {.fragment .fade-in fragment-index=2} -->
+
+$$
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
+\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & -G K_D G^\top \end{bmatrix} 
+\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix},
+\qquad y = \dot{q}
+$$
+
+<!-- ::: -->
+
+<!-- ::: -->
+
+::::
+
+::: {.notes}
+**Most basic PBC**
+
+* Start with Hamiltonian dynamics.
+* Use control authority to impose a desired storage fcn., with a minimum at the desired state.
+* Need to solve PDEs in general.
+* Damping injection for asymptotic stability.
+:::
+
+
+## Passivity-Based Control (PBC) Toy Example: Simple Pendulum {auto-animate="false" auto-animate-easing="ease" visibility="uncounted"}
+<!-- ###################################################################### -->
+
+:::: {.callout-tip icon="false"}
+
+## Control Synthesis via PBC
+
+Choose $u = u_{es} + u_{di}$ that transforms system into a passive one with $x^\star =  (q^\star, 0)$
+
+$Gu_{es} = \nabla_q H  - \nabla_q H_d , \quad Gu_{di} = -GK_D G^\top \nabla_p H_d$
+
+$$
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
+\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & -G K_D G^\top \end{bmatrix} 
+\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix},
+\qquad y = \dot{q}
+$$
+
+
+::: {.fragment .fade-up fragment-index=0}
+$H_d(q,p) = \frac{1}{2} J^{-1} p^2 + V_d(q), \quad V_d(q) = \frac{1}{2} K_{P} \left( q - q^\star \right)^2 \implies H_d \geq 0$  
+:::
+
+<!-- $\dot{H_d} = -\left(  \nabla_p H_d \right)^\top K_D \left(  \nabla_p H_d \right) \leq 0$ -->
+
+::: {.fragment .fade-up fragment-index=0}
+$\dot{H}_d = -K_D \left( J^{-1} p \right)^2 = y^\top u_{di} \leq 0$
+
+**In general, hard to show that such an $H_d$ exists!**
+:::
+
+::: {.fragment .fade-up}
+$\boxed{u = -mgl\sin(q) - K_P(q - q^\star) - K_D \dot{q}}$
+:::
+
+::::
+
+::: {.notes}
+* Difficulty is in finding an $H_d$ that satisfies the PDEs with the desired minimum.
+* In this fully actuated case, it is simple, with the resulting controller given.
 :::
 
 
@@ -114,99 +248,24 @@ $$
 \end{cases}
 $$
 <span hidden="hidden">%</span>
-Control problem is cast as a search for $H_d$ and $h_d$ s.t. $\dot{H}_d \leq y_d^\top u_{di}$
-:::
-
-## PBC Toy Example: Simple Pendulum {auto-animate="false" auto-animate-easing="ease"}
-<!-- ###################################################################### -->
-
-:::: {.callout-note icon="false"}
-
-## System Dynamics
-
-$H(q,p) = \frac{1}{2} J^{-1} p^2 + mgl (1 - \cos q)$
-
+Control problem is cast as a search for $H_d$ and $h_d$ such that 
 $$
-\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
-\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & 0 \end{bmatrix} 
-\begin{bmatrix} \nabla_q H_{\phantom{d}} \\ \nabla_p H_{\phantom{d}} \end{bmatrix} +
-\begin{bmatrix} 0 \\ G \end{bmatrix} u_\phantom{di},
-\qquad y = \dot{q}
-$$
-
-::: {.fragment .fade-in fragment-index=1}
-Choose $u = u_{es} + u_{di}$ that transforms system into a passive one  with $x^\star = (q^\star, 0)$
-<!-- and $H_d$ satisfying $\dot{H}_{d} \leq y^\top u_{di}$ -->
-:::
-
-::: {.fragment .fade-in  fragment-index=2}
-
-$Gu_{es} = \nabla_q H  - \nabla_q H_d , \quad Gu_{di} = -GK_D G^\top \nabla_p H_d$
-:::
-
-
-::: {.r-stack}
-
-::: {.fragment .fade-in-then-out fragment-index=1}
-$$
-\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
-\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & 0 \end{bmatrix} 
-\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix} +
-\begin{bmatrix} 0 \\ G \end{bmatrix} u_{di},
-\qquad y = \dot{q}
-$$
-:::
-
-::: {.fragment .fade-in fragment-index=2}
-
-$$
-\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
-\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & -G K_D G^\top \end{bmatrix} 
-\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix},
-\qquad y = \dot{q}
+\dot{H}_d \leq y_d^\top u_{di}
 $$
 
 :::
 
+* Choosing $u_{di} = -k y_d \implies \dot{H}_d \leq 0$.
+* Asymptotically stable if zero-state detectability holds.
+
+::: {.notes}
+* General PBC follows a similar trajectory.
+* Start with a Hamiltonian system
+* Use control authority to seek a suitable desired Hamiltonian with a minimum at the desired state.
+* Stabilize using damping injection.
 :::
 
-::::
 
-
-## PBC Toy Example: Simple Pendulum {auto-animate="false" auto-animate-easing="ease" visibility="uncounted"}
-<!-- ###################################################################### -->
-
-:::: {.callout-tip icon="false"}
-
-## Control Synthesis via PBC
-
-Choose $u = u_{es} + u_{di}$ that transforms system into a passive one with $x^\star =  (q^\star, 0)$
-
-$Gu_{es} = \nabla_q H  - \nabla_q H_d , \quad Gu_{di} = -GK_D G^\top \nabla_p H_d$
-
-$$
-\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = 
-\begin{bmatrix} \phantom{-}0 & 1 \\ -1 & -G K_D G^\top \end{bmatrix} 
-\begin{bmatrix} \nabla_q H_d \\ \nabla_p H_d \end{bmatrix},
-\qquad y = \dot{q}
-$$
-
-
-::: {.fragment .fade-up}
-$H_d(q,p) = \frac{1}{2} J^{-1} p^2 + V_d(q), \quad V_d(q) = \frac{1}{2} K_{P} \left( q - q^\star \right)^2$
-:::
-
-<!-- $\dot{H_d} = -\left(  \nabla_p H_d \right)^\top K_D \left(  \nabla_p H_d \right) \leq 0$ -->
-
-::: {.fragment .fade-up}
-$\dot{H}_d = -K_D \left( J^{-1} p \right)^2 = y^\top u_{di} \leq 0$
-:::
-
-::: {.fragment .fade-up}
-$\boxed{u = -mgl\sin(x) - K_P(q - q^\star) - K_D \dot{q}}$
-:::
-
-::::
 
 ## {background-video="contents/assets/ballbot_youtube_trim_reverse.mp4"}
 <!-- ###################################################################### -->
@@ -454,10 +513,11 @@ $$\frac{\text{d}\lambda}{\text{d}t} = -\lambda \frac{\partial f}{\partial x}, \q
 ::::{.columns}
 :::{.column width=50%}
 
-<br/>
-
 ::: {.fragment fragment-index=0}
-* <span style="font-variant:small-caps;">NeuralPbc</span> assumes a nominal model $\dot{x} = f_p(x, u)$
+* <span style="font-variant:small-caps;">NeuralPbc</span> assumes a nominal model 
+$$
+\dot{x} = f_p(x, u)
+$$
 * The trained controller must not overfit on the observations generated from the nominal model
 :::
 
@@ -482,6 +542,15 @@ $$\frac{\text{d}\lambda}{\text{d}t} = -\lambda \frac{\partial f}{\partial x}, \q
     {\underbrace{\int_\theta P(\mathbb{D} \mid \theta^\prime)P(\theta^\prime)
     d\theta^\prime}_{\text{evidence}}}.
   $$
+:::
+
+::: {.notes}
+* The vanilla NeuralPBC generates data from a nominal model
+  - Deduces a neural network whose weights are point estimates.
+* Contrast, we want to make $H_d$ a BNN.
+  - Learn prob. distributions over the weights conditioned on the observed data.
+  - Do this by invoking Bayes's rule, where we postulate a simple likelihood and a prior function
+  - No need to compute the evidence, as it turns out.
 :::
 
 
@@ -539,6 +608,19 @@ $$
 \sigma^2}{p+\theta}\right) \right]
 $$
 :::
+:::
+
+::: {.notes}
+* Simplest dynamical system with a continuous flow depending on 
+  - uncertain system parameter $p$ modelled as a normal distribution
+  - controller parameter $\theta$
+* The stochastic part models the measurement uncertainty
+  - state $x$ is sensed through a gaussian noise process
+
+* Solution can be found for this simple case.
+* Consider the cost function being the state and the control not being zero.
+  - Inserting the solution $x(t)$ into the cost fcn. allows us to compute its 
+  conditional expectation over the measurement distribution
 :::
 
 
@@ -602,6 +684,17 @@ $$
 :::
 
 
+::: {.notes}
+* The derivation of this conditional expectation follows the rules of Ito 
+calculus and the Wiener process to perform some simplifications.
+* This computation is important because it allows us to take a further expectation 
+to compute the total expectation $\mathbb{E}\mathcal{J}$ of the cost fcn. 
+* The total expectation can only be computed numerically and this computation 
+can then be autodiff'd to find its gradient w.r.t. the parameter $\theta$
+* I could can this slide.
+:::
+
+
 ## Optimal Controller {auto-animate="true" auto-animate-easing="ease-in-out"}
 <!-- ###################################################################### -->
 
@@ -639,6 +732,13 @@ Minimal expected cost $\mathbb{E}\mathcal{J}$
 * Bayesian learning strikes the right trade-off.
 :::
 
+::: {.notes}
+* The gradient information may be used to deduce the optimal control parameter $\theta$ 
+under the various sources of uncertaintly.
+* There is a nontrivial trade-off $\ldots$
+:::
+
+
 ## Bayesian <span style="font-variant:small-caps;">NeuralPbc</span> {auto-animate="true" auto-animate-easing="ease-in-out"}
 
 <br/>
@@ -671,7 +771,7 @@ $$
 :::
 
 :::{.fragment .fade-in-then-out fragment-index=1}
-::: {.callout-note icon="false" data-id="bayesian"}
+::: {.callout-warning icon="false" data-id="bayesian"}
 ## Bayesian <span style="font-variant:small-caps;">NeuralPbc</span> Optimization Problem 
 $$
 \begin{aligned}
@@ -727,7 +827,7 @@ $$
 $$
 :::
 
-::: {.callout-note icon="false" data-id="bayesian"}
+::: {.callout-warning icon="false" data-id="bayesian"}
 ## Bayesian <span style="font-variant:small-caps;">NeuralPbc</span> Optimization Problem 
 $$
 \begin{aligned}
@@ -762,7 +862,7 @@ $$
 
 * We provide more structure to the variance of the Bayesian controllers
 
-::: {.callout-note icon="false"}
+::: {.callout-tip icon="false"}
 ## Bayesian <span style="font-variant:small-caps;">NeuralPbc</span> Optimization Problem 
 $$
 \begin{aligned}
@@ -778,10 +878,10 @@ $$
 :::
 * **Objective**: maximize <span style="font-variant:small-caps;">Elbo</span> 
 
-\begin{gather*}
-  \mathcal{L}(J,z) = \mathbb{E}_{\theta \sim Q} \left[\ln(P(J \mid \theta)P(\theta)) - \ln(Q(\theta;z)) \right] \\ 
-  P(J | \theta) = \mathcal{N}(J \; | \; 0, s).
-\end{gather*}
+\begin{align*}
+  \mathcal{L}(J,z) &= \mathbb{E}_{\theta \sim Q} \left[\ln(P(J \mid \theta)P(\theta)) - \ln(Q(\theta;z)) \right] \\ 
+  P(J | \theta) &= \mathcal{N}(J \; | \; 0, s).
+\end{align*}
 
 
 ## <span style="font-variant:small-caps;">NeuralPbc</span>: Hybrid System
@@ -790,14 +890,14 @@ $$
 
 ::: {layout="[50,-5,50]" layout-valign="center" .fragment fragment-index=0}
 
-:::{.callout-note icon="false"}
+:::{.callout-tip icon="false"}
 ## Passive Smooth System
 $$
 H\left(  x(t_1) \right) \leq  H\left(  x(t_0) \right) + \int_{t_0}^{t_1} s(u(t), y(t)) \, \text{d}t
 $$
 :::
 
-:::{.callout-important icon="false"}
+:::{.callout-tip icon="false"}
 ## Passive Hybrid System
 \begin{gather*}
 H\left(  x(t_1) \right) \leq  H\left(  x(t_0) \right) + \int_{t_0}^{t_1} s(u(t), y(t)) \, \text{d}t \\
@@ -836,15 +936,43 @@ H(x^+) \leq H(x^-)
 \end{aligned}
 
 :::
-<!-- {{< video contents/assets/rw_uneven.mp4 >}} -->
-{{< video https://youtu.be/bWdrBP5Ax9s
-   height=300 width="100%" >}}
 
+:::: {.columns}
+
+::: {.column width="50%"}
+<!-- {{< video contents/assets/rw_uneven.mp4 >}} -->
+{{< video https://youtu.be/bWdrBP5Ax9s width=500 height=181 >}}
+
+::: {.callout appearance="minimal"}
+$p_s \sim \mathbb{U}(0 \textrm{cm}, 2\textrm{cm})$
+:::
+
+:::
+
+::: {.column width="50%"}
+{{< video ./contents/assets/rw_uneven_success.mp4 width=500 >}}
+:::
+
+::::
 
 # Case Studies {visibility="uncounted"}
 
-## {background-video="contents/assets/cartpole-exp.mp4" background-size="contain" background-video-loop="true" background-video-muted="true"}
+<!-- ## {background-video="contents/assets/cartpole-exp.mp4" background-size="contain" background-video-loop="true" background-video-muted="true"} -->
 <!-- ###################################################################### -->
+
+
+## Cart-Pole and Cart-Pole with Walls
+
+&nbsp;
+
+&nbsp;
+
+::: {layout="[[-100], [100 -20 100], [-100]]"}
+{{< video ./contents/assets/cartpole-exp.mp4 width=550 >}}
+
+{{< video ./contents/assets/cartpole_hardware.mp4 width=550 >}}
+:::
+
 
 
 ## Deterministic vs. Bayesian
@@ -875,7 +1003,8 @@ H(x^+) \leq H(x^-)
 
 ## {background-video="contents/assets/4_rings_hardware.mp4" background-size="contain" background-video-muted="true" background-video-loop="true"}
 
-## Rimless Wheel with Torso
+
+## Rimless Wheel with Torso {visibility="hidden"}
 
 :::: {.columns}
 

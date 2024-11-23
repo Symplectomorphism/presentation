@@ -1,42 +1,56 @@
-# Robust Localization over Power Lines {visibility="uncounted"}
+<!-- # Robust Localization over Power Lines {visibility="uncounted"} -->
 <!-- ###################################################################### -->
 
-## Robust Localization w.r.t. Power Lines in Sparse Environments 
+## Robust Localization over Power Lines
 
 :::: {.columns}
 
 ::: {.column width="55%"}
 
+<br>
+
 1. The ground has a uniform texture.
-2. There are too few utility poles or immediate fences.
-3. There are no trees or other geometries.
-4. GPS provides absolute position, need relative pose to power lines!
+2. Too few utility poles or immediate fences.  
+   There are no trees or other geometries.
+3. GPS provides absolute position.  
+   Drone requires pose relative to power lines!
 
 :::
 
 ::: {.column width="45%"}
 
-::: {.fragment .fade-in fragment-index=1}
 <iframe width="560" height="315" src="https://www.youtube.com/embed/-CU5aX9z62I?si=8N3OLPNZO5y0uv31?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
 
 :::
 
 ::::
 
-::: {.callout-note appearance="simple" .fragment .fade-in fragment-index=1}
+::: {.callout-warning appearance="simple"}
 ## Insufficient landmarks
 Any vision-based estimation mechanism will not perform reliably and robustly for drone localization.
 :::
 
-::: {.callout-tip appearance="default" .fragment .fade-in fragment-index=1}
+::: {.callout-tip appearance="default"}
 ## Electromagnetic field around the power lines
 If we can get reliable measurements, then we can devise a distance and bearing 
 factor exploiting this field.
 :::
 
+::: {.notes}
+* Examples:
+  - mounting bird diverters
+  - dynamic line rating sensors to facilitate efficient power flow through trans. lines.
 
-## Electric and Magnetic Field around Three-Phase Power Lines {auto-animate=true}
+* Localization problem difficult b/c
+  - scene has no salient features
+  - GPS absolute not relative
+
+* Literature not good at exploiting the EM field
+  - Great for robust relative pose estimation
+:::
+
+
+## Electric and Magnetic Field around Three-Phase Power Lines {auto-animate=true visibility="hidden"}
 
 :::: {.columns}
 
@@ -71,8 +85,21 @@ From total rms energy considerations, it can be shown that $\bar{B} = \sqrt{\mu_
 
 ::::
 
+::: {.notes}
+* The structure and geometry of the EM Field around three-phase flow
+  - contours curves: rms E-field
+  - gradient 
+  - transverse plane
 
-## Gradient of the Electric Field around Three-Phase Power Lines {auto-animate=true}
+* Quasi-static approx. to Maxwell's eqns. are good enough.
+  - Closed form
+
+* From energy considerations: rms B-field $\propto$ rms E-field
+  - Easier to measure the rms Bdot.
+:::
+
+
+## Gradient of the Electric Field around Three-Phase Power Lines {auto-animate=true visibility="hidden"}
 
 
 :::: {.columns}
@@ -104,6 +131,12 @@ formed by the transmission wires for every $\mathbf{q}$.
 
 ::::
 
+::: {.notes}
+* Gradient in closed-form
+  - has some remarkable properties
+  - all thanks to this lemma: points to the convex hull of the transmission wires.
+:::
+
 
 ## Navigating the UAV to One of the Power Lines {auto-animate=true}
 
@@ -111,15 +144,21 @@ formed by the transmission wires for every $\mathbf{q}$.
 
 ::: {.column width="53%"}
 
-::: {.callout-tip icon=false}
-## Potential Function and its Gradient
+::: {.callout-warning appearance="minimal"}
+<!-- ## Potential Function and its Gradient -->
 Define the potential function $V(\mathbf{q}) = \frac{1}{\bar{E}^2(\mathbf{q})}$.
 Its gradient is 
 $$
 \nabla_{\mathbf{q}}V(\mathbf{q}) = -\frac{2}{\bar{E}^3}\nabla_{\mathbf{q}}\bar{E}(\mathbf{q})
 $$
-Further, $\lVert \nabla_{\mathbf{q}}V(\mathbf{q}) \rVert = O\left(\frac{1}{\bar{E}}\right)$
+Further, $\lVert \nabla_{\mathbf{q}}V(\mathbf{q}) \rVert = O\left(1/\bar{E}\right)$
 as $\bar{E} \rightarrow \infty$ (or $r_\alpha \rightarrow 0$).
+:::
+
+::: {.callout-tip icon=false}
+## Lemma: Direction of the gradient
+The gradient $\nabla_{\mathbf{q}} \bar{E}(\mathbf{q})$ points into the convex hull (triangle)
+formed by the transmission wires for every $\mathbf{q}$.
 :::
 
 ::: {.callout-tip icon=false}
@@ -132,10 +171,27 @@ the remaining 2 are __saddle points__!
 
 :::
 
+::: {.notes}
+**First way to exploit:** navigate the UAV to one of the power lines.
+
+* Create potential so that 
+  - its gradient vanishes at one of the power lines.
+* Further lemma: these are its only minima
+* Other critical points of V are saddle points
+  - Can be shown by combining Morse theory and Poincare-Hopf theorem 
+    - Index of a vector field around a critical point
+    - lined to the Euler characteristic of the underlying manifold
+
+* Analysis shows:
+  - Following the grad of the rms E-field gets to one of the power lines
+  - RMS quantities: low-pass filter --> robustness
+:::
+
+
 ::: {.column width="47%"}
 ![](./contents/assets/e_field_trajectory.svg){width="100%"}
 
-::: {.callout-important appearance="minimal"}
+::: {.callout-warning appearance="minimal"}
 Following $\nabla_{\mathbf{q}}V(\mathbf{q})$ navigates the drone to one of the 
 power lines.
 :::
@@ -145,7 +201,9 @@ power lines.
 ::::
 
 
-## Robust Localization with GTSAM: Sensor Fusion Library {auto-animate=true}
+## Robust Localization with GTSAM: Sensor Fusion
+
+### Fuse $\nabla_{\mathbf{q}}\bar{E}(\mathbf{q})$, IMU, GPS, Camera Measurements {auto-animate=true}
 
 :::: {.columns} 
 
@@ -209,59 +267,74 @@ $$
 
 :::{.fragment .fade-in-then-out fragment-index=2 }
 
-![](./contents/assets/nodes_gtsam_2.svg){.absolute top=194 left=50 width="1400" height="250"}
+![](./contents/assets/nodes_gtsam_2.svg){.absolute top=254 left=50 width="1400" height="250"}
 
 :::
 
 :::{.fragment .fade-in-then-out fragment-index=3 }
 
-![](./contents/assets/nodes_gtsam_3.svg){.absolute top=250 left=50 width="1400" height="350"}
+![](./contents/assets/nodes_gtsam_3.svg){.absolute top=310 left=50 width="1400" height="350"}
 
 :::
 
 
 :::{.fragment .fade-in fragment-index=4 }
 
-![](./contents/assets/nodes_gtsam_1.svg){.absolute top=250 left=50 width="1500" height="450"}
+![](./contents/assets/nodes_gtsam_1.svg){.absolute top=310 left=50 width="1500" height="390"}
 
 :::
 
 :::
 
+
+::: {.notes}
+**Second way to exploit the gradient:** use it as a measurement factor.
+
+* Factor-graph based state estimators
+  - each measurement is a factor of a graph
+  - the graph's nodes are estimated states
+  - the graph's edges connect state estimates to observations with a factor.
+
+* Prob. distribution constructed
+  - corresponds to the current belief of states
+  - each measurement/observation contributes
+  - an optimization problem is solved to find the MAP of this prob. dist.
+:::
 
 
 ## GTSAM meets Gradient of the Electric Field {auto-animate=true}
 
-:::: {.columns}
-
-::: {.column width="55%"}
-
-::: {.callout-tip icon=false}
-## $\nabla_{\mathbf{q}}\bar{E}(\mathbf{q})$ points towards the convex hull
-The unit vector along this gradient may be used as a _bearing_ factor in GTSAM 
-at any point $\mathbf{q}$ during navigation!
-
-* Turns the convex hull of the power lines into a __landmark__.
-
-:::
-
-
-{{< video ./contents/assets/translate_video.mp4 width=600 autoplay="true" >}}
-:::
-
-::: {.column width="45%"}
-![](./contents/assets/bearing_range_exp_arrangement.svg){width="70%" fig-align="center"}
-
 ::: {.r-stack}
-![](./contents/assets/estimated_true_line_phis_cal_uncal2.svg){width="100%" fig-align="right" .fragment .fade-in-then-out fragment-index=0}
 
-![](./contents/assets/relative_position.svg){width="100%" fig-align="right" .fragment .fade-in fragment-index=1}
+::: {.fragment .fade-in-then-out fragment-index=0}
+{{< video ./contents/assets/translate_trimmed.mp4 width=900 autoplay="true" >}}
+:::
+
+::: {.fragment .fade-in-then-out fragment-index=1}
+![](./contents/assets/bearing_range_exp_arrangement.svg){width=900 fig-align="center"}
+:::
+
+::: {.fragment .fade-in-then-out fragment-index=2}
+![](./contents/assets/estimated_true_line_phis_cal.svg){width="100%"}
+:::
+
+::: {.fragment .fade-in fragment-index=3}
+![](./contents/assets/relative_position.svg){width="100%"}
 :::
 
 :::
 
+::: {.notes}
+* **Recall**: the grad of the rms E-field points into the convex hull
+  - each measurement of the E- or B-field is a bearing to a landmark (convex hull)
+  - think of ships observing the light from a lighthouse!
+  - Landmark observation handed to GTSAM for optimization of factor-graph
 
-::::
+* Experiments conducted on custom powered transmission line
+  - AGV carries the appratus for measurements
+  - Plots show that the estimated bearing and distance is close to the truth.
+  - Distance gets more and more accurate as the sensors get close to the line.
+:::
 
 
 
@@ -297,3 +370,17 @@ We are implementing passivity-based controllers (data-driven or otherwise) for m
 :::
 
 ::::
+
+::: {.notes}
+* NSF STTR grant secured.
+  - Implement our state estimation and navigation alg on real UAV.
+  - Autonomously approach and make stable contact.
+
+* Now designing PBC controllers for
+  - making and breaking stable contact
+  - using high-fidelity simulations of the power line and the UAV interaction
+
+* Next goal (control design):
+  - Incorporate wind gusts effects (NN approximators)
+  - CoM changes after installing or uninstalling devices (adaptive ctrl. ideas)
+:::

@@ -15,7 +15,7 @@ institute: "Boise State University"
 :::
 
 ::: {.center}
-![](./contents/assets/UT_Dallas_2_Color_Emblem.svg){width="12%" fig-align="center"}
+![](./contents/assets/UT_Dallas_2_Color_Emblem.svg){width="9%" fig-align="center"}
 :::
 
 
@@ -38,6 +38,11 @@ __Graduate Students__: <br/>
 :us: Alex Peterson :mortar_board: <br/>
 :us: Chandika Silva :mortar_board: <br/>
 :us: Chris Dagher :mortar_board: <br/>
+:::
+
+::: {.notes}
+* Produced several ECE and MBE MS and PhDs.
+* They landed high tech jobs at robotics, ML.
 :::
 
 <!--
